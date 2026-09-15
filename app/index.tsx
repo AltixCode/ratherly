@@ -106,7 +106,6 @@ export default function Rather() {
                   borderWidth: category === option.id ? 2 : 1,
                   borderColor:
                     category === option.id ? colors.accent : colors.border,
-                  opacity: locked ? 0.6 : 1,
                 }}
               >
                 <Text variant="caption">{name}</Text>
