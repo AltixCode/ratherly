@@ -1,0 +1,35 @@
+{
+  "identifier": "ED2AAA4D-4DB3-4E53-A098-480A92C725F4",
+  "nonRenewingSubscriptions": [],
+  "products": [
+    {
+      "displayPrice": "4.99",
+      "familyShareable": false,
+      "internalID": "54A404FF-7FAF-4010-A5E7-F9F53F9BD0B8",
+      "localizations": [
+        {
+          "description": "Ratherly Remove Ads lifetime unlock",
+          "displayName": "Ratherly Remove Ads",
+          "locale": "en_US"
+        }
+      ],
+      "productID": "com.altixcode.ratherly.removeads",
+      "referenceName": "Ratherly Remove Ads",
+      "type": "NonConsumable"
+    }
+  ],
+  "settings": {
+    "_applicationInternalID": "",
+    "_developerTeamID": "",
+    "_failTransactionsEnabled": false,
+    "_lastSynchronizedDate": 0,
+    "_locale": "en_US",
+    "_storefront": "USA",
+    "_storeKitErrors": []
+  },
+  "subscriptionGroups": [],
+  "version": {
+    "major": 4,
+    "minor": 0
+  }
+}
