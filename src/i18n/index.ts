@@ -86,7 +86,7 @@ export const translations = {
       "No subscription, no account required. Everything lives on this device — permanently yours.",
     lifetimeAccess: "Unlock forever — {price}",
     lifetimeAccessPlain: "Unlock forever",
-    oneTimePayment: "Pay once. That's the whole bill.",
+    oneTimePayment: "One payment, and you're done — no billing after that.",
     storeUnavailable:
       "Can't reach the store right now — check your connection and give it another go.",
     purchaseFailed: "That purchase didn't go through — nothing was charged.",
@@ -1043,7 +1043,7 @@ export const translations = {
       "بدون اشتراک، بدون نیاز به حساب کاربری. همه‌چیز روی همین دستگاه می‌ماند — برای همیشه مال شماست.",
     lifetimeAccess: "باز کردن برای همیشه — {price}",
     lifetimeAccessPlain: "باز کردن برای همیشه",
-    oneTimePayment: "فقط یک‌بار پرداخت می‌کنید، همین.",
+    oneTimePayment: "یک پرداخت و تمام — دیگر هیچ هزینه‌ای کسر نمی‌شود.",
     storeUnavailable:
       "در حال حاضر امکان اتصال به فروشگاه نیست — اتصال خود را بررسی و دوباره تلاش کنید.",
     purchaseFailed: "این خرید انجام نشد — هیچ مبلغی کسر نشده است.",
