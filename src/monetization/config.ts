@@ -32,8 +32,8 @@ function adUnit(ios: string | undefined, android: string | undefined, testIos: s
 }
 
 export const revenueCatApiKey: string | undefined = pick(
-  process.env.EXPO_PUBLIC_REVENUECAT_IOS_KEY,
-  process.env.EXPO_PUBLIC_REVENUECAT_ANDROID_KEY,
+  process.env.EXPO_PUBLIC_REVENUECAT_IOS_KEY ?? process.env.EXPO_PUBLIC_RC_IOS_KEY,
+  process.env.EXPO_PUBLIC_REVENUECAT_ANDROID_KEY ?? process.env.EXPO_PUBLIC_RC_ANDROID_KEY,
 );
 
 /** True when purchases can actually be configured on this build. */

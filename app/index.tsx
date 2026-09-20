@@ -68,7 +68,7 @@ export default function Rather() {
           navigation header above it, nothing else pays the notch, and the
           title renders underneath the status bar. */}
       <Screen scroll topInset>
-        <View style={styles.titleRow}>
+        <View style={[styles.titleRow, { paddingTop: spacing.md }]}>
           <View style={{ flex: 1 }}>
             <Text variant="display">{t("appName")}</Text>
             <Text variant="caption" tone="muted">
