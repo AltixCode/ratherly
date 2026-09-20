@@ -2,6 +2,7 @@ import { useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
+  Alert,
   Linking,
   Pressable,
   ScrollView,
@@ -110,10 +111,10 @@ export default function Paywall() {
       style={{
         flex: 1,
         backgroundColor: colors.background,
-        paddingTop: insets.top,
+        paddingTop: Math.max(8, insets.top ? insets.top / 2 : 8),
       }}
     >
-      <View style={{ alignItems: "flex-end", padding: spacing.base }}>
+      <View style={{ alignItems: "flex-end", paddingHorizontal: spacing.base, paddingVertical: spacing.xs }}>
         <Pressable
           accessibilityRole="button"
           accessibilityLabel={t("close")}
@@ -135,10 +136,9 @@ export default function Paywall() {
       <ScrollView
         contentContainerStyle={{
           padding: spacing.xl,
+          paddingTop: spacing.xs,
           paddingBottom: spacing["3xl"],
           ...tabletColumn,
-          flexGrow: 1,
-          justifyContent: "center",
         }}
       >
         {/* Pill-tab synced carousel, not ticked and not numbered stacked rows.
@@ -259,11 +259,23 @@ export default function Paywall() {
               onPress={() => void purchase(lifetime)}
             />
           ) : offeringsResolved ? (
-            // Resolved, with no package: the store is genuinely unreachable or carries no
-            // product yet. Say that, and keep Restore reachable below — a user who already
-            // paid must still be able to get their purchase back.
-            <View style={{ padding: spacing.xl, alignItems: "center" }}>
-              <Text variant="caption" tone="muted" align="center">
+            <View style={{ alignItems: "center" }}>
+              <Button
+                label={t("lifetimeAccessPlain")}
+                size="lg"
+                fullWidth
+                loading={isPurchasing}
+                onPress={async () => {
+                  await refreshOfferings();
+                  const current = usePremiumStore.getState().lifetime;
+                  if (current) {
+                    void purchase(current);
+                  } else {
+                    Alert.alert(t("storeUnavailable"), t("storeUnavailable"));
+                  }
+                }}
+              />
+              <Text variant="caption" tone="muted" align="center" style={{ marginTop: spacing.md }}>
                 {t("storeUnavailable")}
               </Text>
             </View>

@@ -113,7 +113,8 @@ export const translations = {
     chooseA: "Choose: {text}",
     orLabel: "or",
     packDone: "That is the whole pack.",
-    packDoneBody: "Try another pack, or clear your answers to go round again.",
+    haveAnotherRound: 'Have another round',
+    packDoneBody: "Try another pack, or clear your answers to have another round.",
     progressLabel: "{done} of {total}",
     historyTitle: "Your answers",
     emptyHistory: "Nothing answered yet.",
@@ -193,6 +194,7 @@ export const translations = {
     chooseA: "Elegir: {text}",
     orLabel: "o",
     packDone: "Ese es todo el paquete.",
+    haveAnotherRound: 'Tener otra ronda',
     packDoneBody: "Prueba otro paquete o borra tus respuestas para repetir.",
     progressLabel: "{done} de {total}",
     historyTitle: "Tus respuestas",
@@ -273,6 +275,7 @@ export const translations = {
     chooseA: "Choisir : {text}",
     orLabel: "ou",
     packDone: "C’est tout le lot.",
+    haveAnotherRound: 'Faire une autre partie',
     packDoneBody:
       "Essayez un autre lot, ou effacez vos réponses pour recommencer.",
     progressLabel: "{done} sur {total}",
@@ -356,6 +359,7 @@ export const translations = {
     chooseA: "Wählen: {text}",
     orLabel: "oder",
     packDone: "Das war das ganze Paket.",
+    haveAnotherRound: 'Noch eine Runde',
     packDoneBody:
       "Probier ein anderes Paket, oder lösche deine Antworten für eine neue Runde.",
     progressLabel: "{done} von {total}",
@@ -436,6 +440,7 @@ export const translations = {
     chooseA: "Выбрать: {text}",
     orLabel: "или",
     packDone: "Это весь набор.",
+    haveAnotherRound: 'Сыграть ещё раунд',
     packDoneBody:
       "Попробуйте другой набор или очистите ответы, чтобы пройти заново.",
     progressLabel: "{done} из {total}",
@@ -511,6 +516,7 @@ export const translations = {
     chooseA: "选择：{text}",
     orLabel: "或",
     packDone: "这个题包已答完。",
+    haveAnotherRound: '再来一轮',
     packDoneBody: "试试其他题包，或清空答案重新来过。",
     progressLabel: "{done} / {total}",
     historyTitle: "你的答案",
@@ -590,6 +596,7 @@ export const translations = {
     chooseA: "選ぶ：{text}",
     orLabel: "または",
     packDone: "このパックは以上です。",
+    haveAnotherRound: 'もう1ラウンド',
     packDoneBody: "別のパックを試すか、回答を消してもう一度どうぞ。",
     progressLabel: "{done} / {total}",
     historyTitle: "あなたの回答",
@@ -671,6 +678,7 @@ export const translations = {
     chooseA: "Escolher: {text}",
     orLabel: "ou",
     packDone: "Isso é o pacote inteiro.",
+    haveAnotherRound: 'Jogar outra rodada',
     packDoneBody:
       "Experimenta outro pacote, ou limpa as respostas para recomeçar.",
     progressLabel: "{done} de {total}",
@@ -751,6 +759,7 @@ export const translations = {
     chooseA: "선택: {text}",
     orLabel: "또는",
     packDone: "이 팩을 모두 마쳤습니다.",
+    haveAnotherRound: '한 라운드 더 하기',
     packDoneBody: "다른 팩을 시도하거나 답을 지우고 다시 하세요.",
     progressLabel: "{done} / {total}",
     historyTitle: "내 답",
@@ -831,6 +840,7 @@ export const translations = {
     chooseA: "Scegli: {text}",
     orLabel: "o",
     packDone: "Questo è tutto il pacchetto.",
+    haveAnotherRound: 'Fai un altro round',
     packDoneBody:
       "Prova un altro pacchetto, o cancella le risposte per rifarlo.",
     progressLabel: "{done} di {total}",
@@ -912,6 +922,7 @@ export const translations = {
     chooseA: "Seç: {text}",
     orLabel: "ya da",
     packDone: "Paketin tamamı bu kadar.",
+    haveAnotherRound: 'Bir tur daha oyna',
     packDoneBody:
       "Başka bir paket deneyin ya da cevaplarınızı silip baştan başlayın.",
     progressLabel: "{total} içinden {done}",
@@ -991,6 +1002,7 @@ export const translations = {
     chooseA: "اختر: {text}",
     orLabel: "أو",
     packDone: "هذه هي الحزمة كاملة.",
+    haveAnotherRound: 'جولة أخرى',
     packDoneBody: "جرّب حزمة أخرى، أو امسح إجاباتك لتعيد الجولة.",
     progressLabel: "{done} من {total}",
     historyTitle: "إجاباتك",
@@ -1070,6 +1082,7 @@ export const translations = {
     chooseA: "انتخاب: {text}",
     orLabel: "یا",
     packDone: "این کل بسته بود.",
+    haveAnotherRound: 'یک دور دیگر',
     packDoneBody:
       "بستهٔ دیگری را امتحان کنید، یا پاسخ‌ها را پاک کنید تا دوباره شروع شود.",
     progressLabel: "{done} از {total}",
@@ -1151,6 +1164,7 @@ export const translations = {
     chooseA: "Επιλογή: {text}",
     orLabel: "ή",
     packDone: "Αυτό ήταν όλο το πακέτο.",
+    haveAnotherRound: 'Άλλος ένας γύρος',
     packDoneBody:
       "Δοκιμάστε άλλο πακέτο ή σβήστε τις απαντήσεις για άλλον γύρο.",
     progressLabel: "{done} από {total}",

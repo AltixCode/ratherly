@@ -41,6 +41,7 @@ interface AnswerState {
   /** The text of a result card. Free cards carry a line naming the app; paid ones do not. */
   shareText: (promptId: string, isPremium: boolean) => string;
   clear: () => void;
+  clearCategory: (category: string) => void;
   persist: () => Promise<void>;
   hydrate: () => Promise<void>;
 }
@@ -112,6 +113,16 @@ export const useAnswerStore = create<AnswerState>((set, get) => ({
 
   clear() {
     set({ answers: [] });
+    void get().persist();
+  },
+
+  clearCategory(category: string) {
+    set((s) => ({
+      answers: s.answers.filter((a) => {
+        const p = promptById(a.promptId);
+        return p && p.category !== category;
+      }),
+    }));
     void get().persist();
   },
 

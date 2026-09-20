@@ -120,11 +120,11 @@ export default function Rather() {
         {prompt ? (
           <>
             <Text
-              variant="micro"
-              tone="faint"
-              style={{ marginTop: spacing.xl }}
+              variant="heading"
+              tone="accent"
+              style={{ marginTop: spacing.xl, fontWeight: "700" }}
             >
-              {t("wouldYouRather").toUpperCase()}
+              {t("wouldYouRather")}
             </Text>
 
             <Pressable
@@ -177,10 +177,20 @@ export default function Rather() {
             <Text
               variant="caption"
               tone="muted"
-              style={{ marginTop: spacing.xs }}
+              style={{ marginTop: spacing.xs, marginBottom: spacing.md }}
             >
               {t("packDoneBody")}
             </Text>
+            <Button
+              label={t("haveAnotherRound")}
+              variant="primary"
+              fullWidth
+              onPress={() => {
+                void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+                useAnswerStore.getState().clearCategory(category);
+              }}
+              style={{ marginTop: spacing.sm }}
+            />
           </View>
         )}
 
