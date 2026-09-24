@@ -150,11 +150,30 @@ export const PROMPTS: Prompt[] = [
   ]),
 ];
 
+/**
+ * The pool `promptsIn`/`promptById` actually read from. Defaults to the
+ * bundled `PROMPTS`; `setActivePool` (called from `src/content`, never from
+ * here) swaps in the content-drip service's synced set. Kept as a plain
+ * module-level variable rather than a parameter so every existing call site
+ * keeps working unchanged — this file still imports nothing from react,
+ * react-native or expo-*.
+ */
+let activePool: Prompt[] = PROMPTS;
+
+export function setActivePool(pool: Prompt[]): void {
+  activePool = pool;
+}
+
+/** Test-only: restores the bundled bank as the active pool. */
+export function resetActivePool(): void {
+  activePool = PROMPTS;
+}
+
 export const promptsIn = (category: string): Prompt[] =>
-  PROMPTS.filter((p) => p.category === category);
+  activePool.filter((p) => p.category === category);
 
 export const promptById = (id: string): Prompt | undefined =>
-  PROMPTS.find((p) => p.id === id);
+  activePool.find((p) => p.id === id);
 
 /** Whether a player may open a category. */
 export function canUseCategory(category: string, isPremium: boolean): boolean {

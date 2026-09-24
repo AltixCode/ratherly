@@ -1,18 +1,19 @@
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { StatusBar } from 'expo-status-bar';
-import React, { useEffect } from 'react';
-import { I18nManager, LogBox } from 'react-native';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { Stack } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
+import { StatusBar } from "expo-status-bar";
+import React, { useEffect } from "react";
+import { I18nManager, LogBox } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
-import { isRTLLanguage, t } from '@/i18n';
-import { bootstrapAds } from '@/monetization/ads';
-import { shouldShowAds } from '@/monetization/entitlements';
-import { preloadInterstitial } from '@/monetization/interstitial';
+import { isRTLLanguage, t } from "@/i18n";
+import { bootstrapAds } from "@/monetization/ads";
+import { shouldShowAds } from "@/monetization/entitlements";
+import { preloadInterstitial } from "@/monetization/interstitial";
 import { useAnswerStore } from "@/store/useAnswerStore";
-import { usePremiumStore } from '@/store/usePremiumStore';
-import { ThemeProvider, useTheme } from '@/theme';
+import { useContentPoolStore } from "@/store/useContentPoolStore";
+import { usePremiumStore } from "@/store/usePremiumStore";
+import { ThemeProvider, useTheme } from "@/theme";
 
 void SplashScreen.preventAutoHideAsync();
 
@@ -28,13 +29,16 @@ function RootNavigator() {
   const isReady = usePremiumStore((s) => s.isReady);
   const initialize = usePremiumStore((s) => s.initialize);
   const hydrateAnswers = useAnswerStore((s) => s.hydrate);
+  const refreshContentPool = useContentPoolStore((s) => s.refresh);
 
   useEffect(() => {
     void initialize();
-    // Restores the answers and the pack that was open.
-    void hydrateAnswers();
+    // Restores the answers and the pack that was open, THEN syncs the deck —
+    // the content-pool refresh checks the just-hydrated answers to decide
+    // whether a pack is already mid-way through, so it must run after.
+    void hydrateAnswers().then(() => refreshContentPool());
     void SplashScreen.hideAsync();
-  }, [initialize, hydrateAnswers]);
+  }, [initialize, hydrateAnswers, refreshContentPool]);
 
   useEffect(() => {
     // Ads bootstrap (and the iOS tracking prompt) is deferred until we know the user is not
@@ -45,23 +49,23 @@ function RootNavigator() {
 
   return (
     <>
-      <StatusBar style={isDark ? 'light' : 'dark'} />
+      <StatusBar style={isDark ? "light" : "dark"} />
       <Stack
         screenOptions={{
           headerShadowVisible: false,
           headerStyle: { backgroundColor: colors.background },
           headerTintColor: colors.text,
-          headerTitleStyle: { fontWeight: '600' },
+          headerTitleStyle: { fontWeight: "600" },
           contentStyle: { backgroundColor: colors.background },
-          headerBackButtonDisplayMode: 'minimal',
+          headerBackButtonDisplayMode: "minimal",
         }}
       >
         <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="settings" options={{ title: t('settingsTitle') }} />
+        <Stack.Screen name="settings" options={{ title: t("settingsTitle") }} />
         <Stack.Screen name="history" options={{ title: t("historyTitle") }} />
         <Stack.Screen
           name="paywall"
-          options={{ title: '', presentation: 'modal', headerShown: false }}
+          options={{ title: "", presentation: "modal", headerShown: false }}
         />
       </Stack>
     </>
@@ -80,7 +84,7 @@ function RootNavigator() {
  * Gated on `__DEV__` and the capture flag together: an ordinary debug build
  * keeps its warnings, a release build never reaches it.
  */
-if (__DEV__ && process.env.EXPO_PUBLIC_CAPTURE_MODE === '1') {
+if (__DEV__ && process.env.EXPO_PUBLIC_CAPTURE_MODE === "1") {
   LogBox.ignoreAllLogs(true);
 }
 
