@@ -6,6 +6,7 @@ import {
   nextPrompt,
   progressIn,
   promptById,
+  promptsForCycle,
   promptsIn,
   resetActivePool,
   setActivePool,
@@ -112,6 +113,43 @@ describe("nextPrompt", () => {
 
   it("is null for a category that does not exist", () => {
     expect(nextPrompt("invented", new Set())).toBeNull();
+  });
+
+  it("starts a fresh cycle with a different order than cycle 0", () => {
+    // The literal bug reported: "have another round" cleared the answers but the pack
+    // always restarted from promptsIn(category)[0] in the same fixed order, so a replayed
+    // pack looked identical to the one before it.
+    expect(nextPrompt(FREE_CATEGORY, new Set(), 1)).not.toEqual(
+      nextPrompt(FREE_CATEGORY, new Set(), 0),
+    );
+  });
+
+  it("stays deterministic within one cycle, preserving the mid-pack resume guarantee", () => {
+    const answered = new Set([promptsForCycle(FREE_CATEGORY, 3)[0]!.id]);
+    expect(nextPrompt(FREE_CATEGORY, answered, 3)).toEqual(
+      nextPrompt(FREE_CATEGORY, answered, 3),
+    );
+  });
+});
+
+describe("promptsForCycle", () => {
+  it("contains exactly the same prompts as promptsIn, only reordered", () => {
+    const ordered = promptsForCycle(FREE_CATEGORY, 5);
+    expect([...ordered].sort((a, b) => a.id.localeCompare(b.id))).toEqual(
+      [...promptsIn(FREE_CATEGORY)].sort((a, b) => a.id.localeCompare(b.id)),
+    );
+  });
+
+  it("gives the same cycle the same order every time", () => {
+    expect(promptsForCycle(FREE_CATEGORY, 5)).toEqual(
+      promptsForCycle(FREE_CATEGORY, 5),
+    );
+  });
+
+  it("gives different cycles different orders", () => {
+    const a = promptsForCycle(FREE_CATEGORY, 5).map((p) => p.id);
+    const b = promptsForCycle(FREE_CATEGORY, 6).map((p) => p.id);
+    expect(a.join()).not.toBe(b.join());
   });
 });
 

@@ -182,16 +182,62 @@ export function canUseCategory(category: string, isPremium: boolean): boolean {
 }
 
 /**
+ * A deterministic permutation of `[0, length)`, seeded from `key` — the same key always
+ * produces the same order, and different keys produce (to a human eye) unrelated orders.
+ * FNV-1a to turn the string into a seed, then a seeded Fisher-Yates over an LCG.
+ */
+function seededOrder(key: string, length: number): number[] {
+  let seed = 2166136261;
+  for (let i = 0; i < key.length; i += 1) {
+    seed ^= key.charCodeAt(i);
+    seed = Math.imul(seed, 16777619);
+  }
+  const order = Array.from({ length }, (_, i) => i);
+  for (let i = order.length - 1; i > 0; i -= 1) {
+    seed = (Math.imul(seed, 1103515245) + 12345) >>> 0;
+    const j = seed % (i + 1);
+    const a = order[i]!;
+    order[i] = order[j]!;
+    order[j] = a;
+  }
+  return order;
+}
+
+/**
+ * `promptsIn(category)`, reordered deterministically by `cycle`.
+ *
+ * `cycle` is a count of how many times this category's answers have been cleared (see
+ * `useAnswerStore.cycle`), not a date — this app has no daily reset, a pack simply stays
+ * answered until "Have another round" clears it. The same cycle always reorders the same way
+ * (so a player who force-quits mid-pack resumes exactly where they were, preserving the
+ * resume guarantee below), but a fresh round after clearing gets a different order — fixing
+ * what testers reported as "these questions are exactly the same as a few days ago."
+ */
+export function promptsForCycle(category: string, cycle: number): Prompt[] {
+  const pool = promptsIn(category);
+  // Cycle 0 (never cleared -- a first-ever run) keeps the original declared order, so
+  // nothing about a first playthrough changes; only a round *after* a clear gets reshuffled.
+  if (cycle === 0) return pool;
+  const order = seededOrder(`${category}:${cycle}`, pool.length);
+  return order.map((i) => pool[i]!);
+}
+
+/**
  * The next unanswered prompt in a category, or null when the pack is finished.
  *
- * Deterministic given the answered set: no shuffling, so a player who closes the app mid-pack
- * comes back to where they were rather than to a random re-roll.
+ * Deterministic given the answered set and cycle: no re-shuffling mid-pack, so a player who
+ * closes the app mid-pack comes back to where they were rather than to a random re-roll.
+ * `cycle` defaults to 0 for callers that do not track one (e.g. existing tests), which
+ * reproduces the original fixed declaration order.
  */
 export function nextPrompt(
   category: string,
   answered: Set<string>,
+  cycle = 0,
 ): Prompt | null {
-  return promptsIn(category).find((p) => !answered.has(p.id)) ?? null;
+  return (
+    promptsForCycle(category, cycle).find((p) => !answered.has(p.id)) ?? null
+  );
 }
 
 /** How far through a pack a player is. */

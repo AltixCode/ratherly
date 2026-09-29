@@ -31,6 +31,12 @@ export interface Answer {
 interface AnswerState {
   answers: Answer[];
   category: string;
+  /**
+   * How many times each category's answers have been cleared -- fed into
+   * `nextPrompt`/`promptsForCycle` so a fresh round after clearing gets a different prompt
+   * order instead of replaying the same pack from the top every time.
+   */
+  cycles: Record<string, number>;
 
   answer: (promptId: string, side: Side) => void;
   /** Clears one answer so the prompt comes round again. */
@@ -40,6 +46,7 @@ interface AnswerState {
   setCategory: (id: string, isPremium: boolean) => "set" | "locked";
   /** The text of a result card. Free cards carry a line naming the app; paid ones do not. */
   shareText: (promptId: string, isPremium: boolean) => string;
+  cycleFor: (category: string) => number;
   clear: () => void;
   clearCategory: (category: string) => void;
   persist: () => Promise<void>;
@@ -60,9 +67,30 @@ function validAnswers(value: unknown): Answer[] {
   );
 }
 
+function validCycles(value: unknown): Record<string, number> {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return {};
+  const out: Record<string, number> = {};
+  for (const [id, count] of Object.entries(value as Record<string, unknown>)) {
+    if (
+      CATEGORIES.some((c) => c.id === id) &&
+      typeof count === "number" &&
+      Number.isInteger(count) &&
+      count >= 0
+    ) {
+      out[id] = count;
+    }
+  }
+  return out;
+}
+
 export const useAnswerStore = create<AnswerState>((set, get) => ({
   answers: [],
   category: FREE_CATEGORY,
+  cycles: {},
+
+  cycleFor(category) {
+    return get().cycles[category] ?? 0;
+  },
 
   answer(promptId, side) {
     if (!promptById(promptId)) return;
@@ -112,7 +140,12 @@ export const useAnswerStore = create<AnswerState>((set, get) => ({
   },
 
   clear() {
-    set({ answers: [] });
+    set((s) => ({
+      answers: [],
+      cycles: Object.fromEntries(
+        CATEGORIES.map((c) => [c.id, (s.cycles[c.id] ?? 0) + 1]),
+      ),
+    }));
     void get().persist();
   },
 
@@ -122,16 +155,17 @@ export const useAnswerStore = create<AnswerState>((set, get) => ({
         const p = promptById(a.promptId);
         return p && p.category !== category;
       }),
+      cycles: { ...s.cycles, [category]: (s.cycles[category] ?? 0) + 1 },
     }));
     void get().persist();
   },
 
   async persist() {
-    const { answers, category } = get();
+    const { answers, category, cycles } = get();
     try {
       await AsyncStorage.setItem(
         ANSWER_CACHE_KEY,
-        JSON.stringify({ answers, category }),
+        JSON.stringify({ answers, category, cycles }),
       );
     } catch {
       // A lost history is survivable; a failed launch is not.
@@ -152,6 +186,7 @@ export const useAnswerStore = create<AnswerState>((set, get) => ({
           CATEGORIES.some((c) => c.id === record.category)
             ? record.category
             : FREE_CATEGORY,
+        cycles: validCycles(record.cycles),
       });
     } catch {
       // Unreadable storage starts empty rather than preventing launch.

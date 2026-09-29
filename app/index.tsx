@@ -28,11 +28,12 @@ export default function Rather() {
   const answer = useAnswerStore((s) => s.answer);
   const setCategory = useAnswerStore((s) => s.setCategory);
   const shareText = useAnswerStore((s) => s.shareText);
+  const cycle = useAnswerStore((s) => s.cycles[category] ?? 0);
 
   // Derived from `answers` on every render rather than stored: a second copy of something
   // that is already a pure function of the list is a second thing to keep in step.
   const answered = new Set(answers.map((a) => a.promptId));
-  const prompt = nextPrompt(category, answered);
+  const prompt = nextPrompt(category, answered, cycle);
   const progress = progressIn(category, answered);
 
   const choose = useCallback(
